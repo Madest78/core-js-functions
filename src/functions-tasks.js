@@ -165,14 +165,17 @@ function memoize(func) {
  */
 function retry(func, attempts) {
   return function retrying(...args) {
+    let lastError;
     for (let i = 0; i < attempts; i += 1) {
       try {
         return func(...args);
       } catch (error) {
-        console.error(`Attempt ${i + 1} failed: ${error}`);
+        lastError = error;
       }
     }
-    throw new Error(`All ${attempts} attempts failed`);
+    throw new Error(
+      `All ${attempts} attempts failed. Last error: ${lastError}`
+    );
   };
 }
 
