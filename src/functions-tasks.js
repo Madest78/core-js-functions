@@ -18,7 +18,7 @@
  *
  */
 function getCurrentFunctionName() {
-  throw new Error('Not implemented');
+  return getCurrentFunctionName.name;
 }
 
 /**
@@ -32,8 +32,12 @@ function getCurrentFunctionName() {
  *   getFunctionBody(hiHello) => "function hiHello() { console.log('hello world'); }"
  *
  */
-function getFunctionBody(/* func */) {
-  throw new Error('Not implemented');
+
+function getFunctionBody(func) {
+  if (typeof func !== 'function') {
+    return '';
+  }
+  return func.toString();
 }
 
 /**
@@ -50,8 +54,12 @@ function getFunctionBody(/* func */) {
  *  ]) => [0, 1, 2]
  *
  */
-function getArgumentsCount(/* funcs */) {
-  throw new Error('Not implemented');
+function getArgumentsCount(funcs) {
+  const counts = [];
+  funcs.forEach((func) => {
+    counts.push(func.length);
+  });
+  return counts;
 }
 
 /**
@@ -70,8 +78,10 @@ function getArgumentsCount(/* funcs */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return function powerExp(x) {
+    return x ** exponent;
+  };
 }
 
 /**
@@ -87,8 +97,25 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...coefficients) {
+  if (coefficients.length === 0) {
+    return null;
+  }
+
+  if (coefficients.length === 1) {
+    const constant = coefficients[0];
+    return function polynomX1() {
+      return constant;
+    };
+  }
+
+  return function polynomX2(x) {
+    let result = 0;
+    coefficients.forEach((coeff, index) => {
+      result += coeff * x ** (coefficients.length - 1 - index);
+    });
+    return result;
+  };
 }
 
 /**
@@ -105,8 +132,20 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cache = {};
+
+  return function memoized(...args) {
+    const key = JSON.stringify(args);
+
+    if (Object.prototype.hasOwnProperty.call(cache, key)) {
+      return cache[key];
+    }
+
+    const result = func(...args);
+    cache[key] = result;
+    return result;
+  };
 }
 
 /**
